@@ -3,7 +3,7 @@ package com.udun_demo.support.common;
 public class Response {
 
     public static final ResponseBean REGISTER_SAVE_FAIL = new ResponseBean(1000, "注册保存数据失败");
-    public static final ResponseBean USERNAME_EXIST = new ResponseBean(1001, "用户名已经存在");
+    public static final ResponseBean USERNAME_EXIST = new ResponseBean(1001, "手机号已经注册");
     public static final ResponseBean GENERATE_ADDRESS_ERROR = new ResponseBean(1002, "获取地址失败");
     public static final ResponseBean GET_SUPPORT_COIN_ERROR = new ResponseBean(1003, "获取支持币种异常");
     public static final ResponseBean CHECK_ADDRESS_ERROR = new ResponseBean(1004, "地址校验失败");

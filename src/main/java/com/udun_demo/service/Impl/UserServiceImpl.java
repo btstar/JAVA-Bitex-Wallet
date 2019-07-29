@@ -14,6 +14,7 @@ import com.udun_demo.support.common.Response;
 import com.udun_demo.support.dto.wallet.GenerateAddressDto;
 import com.udun_demo.support.enums.UserBalanceStatusEnum;
 import com.udun_demo.support.utils.GlobalPropertiesGetter;
+import com.udun_demo.support.utils.MD5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             newUser.setCreateTime(new Date())
                     .setUpdateTime(new Date())
                     .setUsername(username)
-                    .setPassword(password);
+                    .setPassword(MD5Utils.getSaltMD5(password));
             if (!insert(newUser)) {
                 log.warn("保存{}失败", newUser);
                 throw new CommonException(Response.REGISTER_SAVE_FAIL);
@@ -127,13 +128,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User login(String username, String password) {
         EntityWrapper<User> ew = new EntityWrapper<>();
-        ew.eq("username",username).eq("password",password);
+        ew.eq("username",username);
         User user = selectOne(ew);
-        if (user == null) {
-            log.warn("用户名{}或者密码{}错误", username,password);
-            throw new CommonException(Response.USERNAME_OR_PASSWORD_ERROR);
+        if (user != null){
+            if (MD5Utils.getSaltverifyMD5(password,user.getPassword())) {
+                return user;
+            }
         }
-        return user;
+        log.warn("用户名{}或者密码{}错误", username,password);
+        throw new CommonException(Response.USERNAME_OR_PASSWORD_ERROR);
+
     }
 
     @Override
@@ -180,7 +184,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new CommonException(Response.NEW_PASSWORD_IS_EMPTY);
         }
         User user = login(username, password);
-        user.setPassword(newPassword).setUpdateTime(new Date());
+        user.setPassword(MD5Utils.getSaltMD5(newPassword)).setUpdateTime(new Date());
         if (!updateById(user)) {
             log.info("用户{}修改密码{}错误", username,newPassword);
             throw new CommonException(Response.SAVE_PASSWORD_ERROR);

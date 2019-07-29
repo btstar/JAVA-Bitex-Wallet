@@ -25,6 +25,7 @@ public class UdunDemoApplication {
     }
 
     public static void main(String[] args) {
+        // 读取配置文件
         String location = System.getProperty(PATH);
         if(location==null){
             String os = System.getProperty("os.name").toLowerCase();
