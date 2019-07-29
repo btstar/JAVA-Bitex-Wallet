@@ -1,5 +1,5 @@
 # JAVA-DEMO
-JAVA SPRING DEMO for join up UDUN-WALLET
+JAVA SpringBoot MAVEN Project DEMO For Join In Udun-Wallet
 Java接入网关的示例代码以及必要说明。
 
 ## 主要内容
